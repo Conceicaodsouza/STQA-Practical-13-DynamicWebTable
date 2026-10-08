@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Web Table - STQA Practical 13</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button, select {
+            padding: 8px 12px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #ddd;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Student Dynamic Web Table</h1>
+
+<button id="sortMarks">Sort by Marks</button>
+
+<label for="resultFilter">Filter Result:</label>
+
+<select id="resultFilter">
+    <option value="All">All</option>
+    <option value="Pass">Pass</option>
+    <option value="Fail">Fail</option>
+</select>
+
+<div id="status">Loading table data...</div>
+
+<table id="studentTable">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Course</th>
+            <th>Marks</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+
+    <tbody id="tableBody">
+    </tbody>
+</table>
+
+<script>
+
+    // Data used to dynamically generate the table
+    const students = [
+        {id: "S101", name: "Aarav", course: "BSc CS", marks: 78, result: "Pass"},
+        {id: "S102", name: "Diya", course: "BSc CS", marks: 45, result: "Fail"},
+        {id: "S103", name: "Rohan", course: "BSc CS", marks: 92, result: "Pass"},
+        {id: "S104", name: "Meera", course: "BSc CS", marks: 61, result: "Pass"},
+        {id: "S105", name: "Kabir", course: "BSc CS", marks: 38, result: "Fail"},
+        {id: "S106", name: "Anaya", course: "BSc CS", marks: 85, result: "Pass"},
+        {id: "S107", name: "Arjun", course: "BSc CS", marks: 54, result: "Fail"},
+        {id: "S108", name: "Ishita", course: "BSc CS", marks: 73, result: "Pass"},
+        {id: "S109", name: "Vivaan", course: "BSc CS", marks: 67, result: "Pass"},
+        {id: "S110", name: "Sara", course: "BSc CS", marks: 29, result: "Fail"}
+    ];
+
+    let currentData = [...students];
+    let ascending = true;
+
+    // Dynamically create table rows
+    function displayTable(data) {
+
+        const tableBody = document.getElementById("tableBody");
+
+        tableBody.innerHTML = "";
+
+        data.forEach(student => {
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.course}</td>
+                <td>${student.marks}</td>
+                <td>${student.result}</td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        document.getElementById("status").textContent =
+            "Displayed rows: " + data.length;
+    }
+
+    // Initial dynamic loading
+    setTimeout(() => {
+        displayTable(currentData);
+    }, 1000);
+
+    // Sorting functionality
+    document.getElementById("sortMarks").addEventListener("click", () => {
+
+        currentData.sort((a, b) => {
+
+            return ascending
+                ? a.marks - b.marks
+                : b.marks - a.marks;
+
+        });
+
+        ascending = !ascending;
+
+        displayTable(currentData);
+    });
+
+    // Filtering functionality
+    document.getElementById("resultFilter").addEventListener("change", function() {
+
+        const selectedResult = this.value;
+
+        if (selectedResult === "All") {
+
+            currentData = [...students];
+
+        } else {
+
+            currentData = students.filter(student =>
+                student.result === selectedResult
+            );
+        }
+
+        displayTable(currentData);
+    });
+
+</script>
+
+</body>
+</html>
